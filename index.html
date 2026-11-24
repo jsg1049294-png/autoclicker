@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <title>AutoClicker – iPad Web Auto Clicker</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖱️</text></svg>" />
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-badge">iPad optimiert · Safari & Chrome</div>
+      <h1>AutoClicker</h1>
+      <p class="tagline">Schwebendes Fenster · Mehrere Klickpositionen · Touch-first</p>
+      <div class="hero-actions">
+        <button id="btn-open-panel" class="btn btn-primary">AutoClicker öffnen</button>
+        <a href="#bookmarklet" class="btn btn-ghost">Für jede Website (Bookmarklet)</a>
+      </div>
+    </header>
+
+    <section class="card limit-card">
+      <h2>⚠️ Wichtige technische Grenze</h2>
+      <p>
+        Eine normale Webseite (auch diese) darf aus Sicherheitsgründen <strong>keine</strong> Klicks in anderen Tabs,
+        anderen Apps oder systemweit auslösen. Das ist von Apple und allen Browsern so vorgesehen.
+      </p>
+      <ul>
+        <li><strong>In dieser Seite:</strong> Der AutoClicker funktioniert vollständig (Demo unten).</li>
+        <li><strong>Auf jeder anderen Website:</strong> Nutze das <a href="#bookmarklet">Bookmarklet</a> – es injiziert den gleichen AutoClicker direkt in die geöffnete Seite.</li>
+        <li>Systemweite Klicks oder Steuerung anderer Apps sind mit reinem Web-Code auf iPadOS <strong>nicht möglich</strong>. Dafür bräuchte man eine native App mit speziellen Berechtigungen (App Store).</li>
+      </ul>
+    </section>
+
+    <section class="card" id="demo">
+      <h2>Demo-Bereich – hier testen</h2>
+      <p>Tippe auf die farbigen Flächen oder den großen Button. Der AutoClicker kann diese Positionen speichern und automatisch klicken.</p>
+      <div class="demo-grid">
+        <button class="demo-target" data-label="Ziel A" id="target-a">Ziel A<br><small>Klick mich</small></button>
+        <button class="demo-target" data-label="Ziel B" id="target-b">Ziel B<br><small>Klick mich</small></button>
+        <button class="demo-target big" data-label="Hauptziel" id="target-main">Hauptziel<br><small>Großer Button</small></button>
+      </div>
+      <div class="demo-stats">
+        <span>Klicks auf Ziele: <strong id="demo-click-count">0</strong></span>
+      </div>
+    </section>
+
+    <section class="card" id="bookmarklet">
+      <h2>Bookmarklet – für jede Website</h2>
+      <p>
+        Das Bookmarklet lädt den AutoClicker in die <em>gerade geöffnete</em> Seite.
+        Danach kannst du Positionen antippen und starten – genau wie hier.
+      </p>
+      <ol class="steps">
+        <li>Kopiere den Bookmarklet-Code (Button unten).</li>
+        <li>Auf dem iPad: In Safari eine beliebige Seite öffnen → Teilen → „Lesezeichen“ / „Zu Favoriten“.</li>
+        <li>Lesezeichen bearbeiten → Adresse komplett durch den kopierten Code ersetzen → Speichern.</li>
+        <li>Auf der gewünschten Website das Lesezeichen antippen → AutoClicker erscheint.</li>
+      </ol>
+      <div class="bookmarklet-box">
+        <textarea id="bookmarklet-code" readonly rows="4"></textarea>
+        <button id="btn-copy-bookmarklet" class="btn btn-primary">Code kopieren</button>
+      </div>
+      <p class="hint">Tipp: Favoritenleiste in den Safari-Einstellungen aktivieren, dann ist der AutoClicker schneller erreichbar.</p>
+    </section>
+
+    <section class="card">
+      <h2>So benutzt du den AutoClicker</h2>
+      <ol class="steps">
+        <li>Fenster erscheint (oder tippe „AutoClicker öffnen“).</li>
+        <li>„Klickposition auswählen“ → auf die Stelle tippen, die geklickt werden soll.</li>
+        <li>Intervall und Anzahl einstellen.</li>
+        <li>Start → Pause / Stop nach Bedarf.</li>
+        <li>Fenster per Titelleiste verschieben, minimieren (−) oder schließen (×).</li>
+      </ol>
+    </section>
+
+    <footer class="footer">
+      <p>Open Source · Keine Daten · Keine Anmeldung · GitHub Pages</p>
+      <p><a href="https://github.com/jsg1049294-png/autoclicker" target="_blank" rel="noopener">Repository auf GitHub</a></p>
+    </footer>
+  </div>
+
+  <!-- Floating AutoClicker Panel (standalone version) -->
+  <div id="ac-root" class="ac-root" aria-hidden="true">
+    <div id="ac-panel" class="ac-panel">
+      <div class="ac-titlebar" id="ac-titlebar">
+        <span class="ac-title">AutoClicker</span>
+        <div class="ac-window-controls">
+          <button class="ac-btn-icon" id="ac-minimize" title="Minimieren" aria-label="Minimieren">−</button>
+          <button class="ac-btn-icon ac-close" id="ac-close" title="Schließen" aria-label="Schließen">×</button>
+        </div>
+      </div>
+      <div class="ac-body" id="ac-body">
+        <div class="ac-section">
+          <button class="ac-btn ac-btn-block" id="ac-pick">Klickposition auswählen</button>
+          <div id="ac-positions" class="ac-positions"></div>
+        </div>
+        <div class="ac-section">
+          <label class="ac-label">Intervall</label>
+          <div class="ac-interval-grid">
+            <button class="ac-chip" data-ms="100">0,1 s</button>
+            <button class="ac-chip" data-ms="250">0,25 s</button>
+            <button class="ac-chip active" data-ms="500">0,5 s</button>
+            <button class="ac-chip" data-ms="1000">1 s</button>
+            <button class="ac-chip" data-ms="2000">2 s</button>
+            <button class="ac-chip" data-ms="5000">5 s</button>
+            <button class="ac-chip" data-ms="10000">10 s</button>
+          </div>
+          <div class="ac-custom-row">
+            <input type="number" id="ac-custom-ms" min="50" max="60000" step="50" placeholder="Eigene ms" />
+            <button class="ac-btn" id="ac-set-custom">Setzen</button>
+          </div>
+        </div>
+        <div class="ac-section">
+          <label class="ac-label">Anzahl Klicks</label>
+          <div class="ac-count-row">
+            <input type="number" id="ac-count" min="0" value="0" placeholder="0 = unendlich" />
+            <span class="ac-hint-inline">0 = unendlich</span>
+          </div>
+        </div>
+        <div class="ac-section ac-controls">
+          <button class="ac-btn ac-btn-start" id="ac-start">Start</button>
+          <button class="ac-btn ac-btn-pause" id="ac-pause" disabled>Pause</button>
+          <button class="ac-btn ac-btn-stop" id="ac-stop" disabled>Stop</button>
+        </div>
+        <div class="ac-section ac-stats">
+          <div>Klicks: <strong id="ac-stat-clicks">0</strong></div>
+          <div>Zeit: <strong id="ac-stat-time">0,0 s</strong></div>
+          <div>Status: <strong id="ac-stat-status">Bereit</strong></div>
+        </div>
+      </div>
+    </div>
+    <button id="ac-restore" class="ac-restore" title="AutoClicker wieder öffnen" aria-label="Wieder öffnen" hidden>●</button>
+  </div>
+
+  <div id="ac-picker-overlay" class="ac-picker-overlay" hidden>
+    <div class="ac-picker-msg">Tippe auf die gewünschte Klickposition</div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
