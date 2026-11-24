@@ -96,41 +96,46 @@
       </div>
       <div class="ac-body" id="ac-body">
         <div class="ac-section">
-          <button class="ac-btn ac-btn-block" id="ac-pick">Klickposition auswählen</button>
+          <button class="ac-btn ac-btn-block ac-btn-pick" id="ac-pick">+ Klickposition auswählen</button>
           <div id="ac-positions" class="ac-positions"></div>
+          <button class="ac-btn ac-btn-ghost ac-btn-sm" id="ac-clear-pos" hidden>Alle Positionen löschen</button>
         </div>
         <div class="ac-section">
-          <label class="ac-label">Intervall</label>
+          <div class="ac-label-row">
+            <label class="ac-label">Intervall</label>
+            <span class="ac-current-val" id="ac-interval-display">0,5 s</span>
+          </div>
           <div class="ac-interval-grid">
-            <button class="ac-chip" data-ms="100">0,1 s</button>
-            <button class="ac-chip" data-ms="250">0,25 s</button>
-            <button class="ac-chip active" data-ms="500">0,5 s</button>
-            <button class="ac-chip" data-ms="1000">1 s</button>
-            <button class="ac-chip" data-ms="2000">2 s</button>
-            <button class="ac-chip" data-ms="5000">5 s</button>
-            <button class="ac-chip" data-ms="10000">10 s</button>
+            <button class="ac-chip" data-ms="100">0,1s</button>
+            <button class="ac-chip" data-ms="250">0,25s</button>
+            <button class="ac-chip active" data-ms="500">0,5s</button>
+            <button class="ac-chip" data-ms="1000">1s</button>
+            <button class="ac-chip" data-ms="2000">2s</button>
+            <button class="ac-chip" data-ms="5000">5s</button>
+            <button class="ac-chip" data-ms="10000">10s</button>
           </div>
           <div class="ac-custom-row">
-            <input type="number" id="ac-custom-ms" min="50" max="60000" step="50" placeholder="Eigene ms" />
-            <button class="ac-btn" id="ac-set-custom">Setzen</button>
+            <input type="number" id="ac-custom-ms" min="50" max="60000" step="50" placeholder="ms" />
+            <button class="ac-btn ac-btn-sm" id="ac-set-custom">Eigene Zeit</button>
           </div>
         </div>
         <div class="ac-section">
-          <label class="ac-label">Anzahl Klicks</label>
-          <div class="ac-count-row">
-            <input type="number" id="ac-count" min="0" value="0" placeholder="0 = unendlich" />
+          <div class="ac-label-row">
+            <label class="ac-label">Anzahl Klicks</label>
             <span class="ac-hint-inline">0 = unendlich</span>
           </div>
+          <input type="number" id="ac-count" class="ac-input-full" min="0" value="0" placeholder="0 = unendlich" />
         </div>
         <div class="ac-section ac-controls">
-          <button class="ac-btn ac-btn-start" id="ac-start">Start</button>
-          <button class="ac-btn ac-btn-pause" id="ac-pause" disabled>Pause</button>
-          <button class="ac-btn ac-btn-stop" id="ac-stop" disabled>Stop</button>
+          <button class="ac-btn ac-btn-start" id="ac-start">▶ Start</button>
+          <button class="ac-btn ac-btn-pause" id="ac-pause" disabled>⏸ Pause</button>
+          <button class="ac-btn ac-btn-stop" id="ac-stop" disabled>■ Stop</button>
         </div>
         <div class="ac-section ac-stats">
-          <div>Klicks: <strong id="ac-stat-clicks">0</strong></div>
-          <div>Zeit: <strong id="ac-stat-time">0,0 s</strong></div>
-          <div>Status: <strong id="ac-stat-status">Bereit</strong></div>
+          <div>Klicks <strong id="ac-stat-clicks">0</strong></div>
+          <div>Zeit <strong id="ac-stat-time">0,0 s</strong></div>
+          <div class="ac-stat-full">Status <strong id="ac-stat-status">Bereit</strong></div>
+          <div class="ac-stat-full" id="ac-next-pos-wrap" hidden>Nächste Pos. <strong id="ac-next-pos">–</strong></div>
         </div>
       </div>
     </div>
